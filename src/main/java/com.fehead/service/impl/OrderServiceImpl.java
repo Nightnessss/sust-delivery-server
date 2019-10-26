@@ -24,10 +24,10 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public List<OrderListVO> selectItemByStatusOk(Integer page,Integer pagesize) {
+    public List<OrderListVO> selectItemByStatusOk(Integer page,Integer pagesize, Integer point) {
 
 
-        List<OrderModel> orderModelList=cloudService.getAcceptableOrder(page,pagesize);
+        List<OrderModel> orderModelList=cloudService.getAcceptableOrder(page,pagesize, point);
 
         List<OrderListVO> realOrderListVOList=orderModelList.stream().map(orderModel -> {
             OrderListVO orderListVO=new OrderListVO();

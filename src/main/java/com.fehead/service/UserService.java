@@ -21,7 +21,7 @@ public interface UserService {
     public void updateItem(OrderModel orderModel) throws BusinessException;
     UserVO getUserById(Integer id);
     List<OrderListVO> getAllOderList(Integer id, Integer page,Integer pageSize);
-    String deleteOrder(Integer id,Integer orderId);
+    String deleteOrder(Integer id,Integer orderId) throws BusinessException;
     OrderPickVO getOrderPick(Integer id,Integer orderId);
 
 }

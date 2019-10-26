@@ -156,4 +156,22 @@ public class OrderModel {
     public void setStatus(StatusModel status) {
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        return "OrderModel{" +
+                "id=" + id +
+                ", updateTime=" + updateTime +
+                ", deadline=" + deadline +
+                ", destination='" + destination + '\'' +
+                ", deliveryPoint=" + deliveryPoint +
+                ", type=" + type +
+                ", fee='" + fee + '\'' +
+                ", remark='" + remark + '\'' +
+                ", publisher=" + publisher +
+                ", receiver=" + receiver +
+                ", status=" + status +
+                ", pick=" + pick +
+                '}';
+    }
 }

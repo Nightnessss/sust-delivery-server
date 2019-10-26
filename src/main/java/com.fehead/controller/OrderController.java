@@ -8,6 +8,9 @@ import com.fehead.model.StatusModel;
 import com.fehead.response.CommonReturnType;
 import com.fehead.service.OrderService;
 import com.fehead.service.UserService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.omg.CORBA.ORB;
@@ -17,8 +20,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@RequestMapping("/api/{version}/SUSTDelivery/view")
+@RequestMapping("/api/v1.0/SUSTDelivery/view")
 @RestController
+@CrossOrigin(allowCredentials = "true",allowedHeaders = "*")
 public class OrderController extends BaseController{
     public static Log logger = LogFactory.getLog(OrderController.class);
     @Autowired
@@ -31,15 +35,22 @@ public class OrderController extends BaseController{
      * @return
      * @throws BusinessException
      */
-    @GetMapping("/order/lists")
-    public CommonReturnType selectItemByStatusOk(@RequestParam(value = "page") Integer page,
-                                                 @RequestParam("pagesize") Integer pagesize) throws BusinessException {
-        logger.info("PARAM: 第几页 " + page);
-        logger.info("PARAM: 页面数量 " + pagesize);
+    @GetMapping("/order/lists/{point}")
+    @ApiOperation("分页查找订单（只返回可接订单）")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "page", value = "页数", dataType = "Integer"),
+            @ApiImplicitParam(name = "pagesize", value = "页大小", dataType = "Integer")
+    })
+    public CommonReturnType selectItemByStatusOk(@PathVariable("point") Integer point,
+                                                 @RequestParam(value = "page", defaultValue = "1") Integer page,
+                                                 @RequestParam(value = "pagesize", defaultValue = "6") Integer pagesize) throws BusinessException {
+        logger.info("PARAM: point " + page);
+        logger.info("PARAM: page " + page);
+        logger.info("PARAM: pagesize " + pagesize);
 
         List<OrderListVO> realOrderListVOList=new ArrayList<>();
         try {
-            realOrderListVOList=orderService.selectItemByStatusOk(page,pagesize);
+            realOrderListVOList=orderService.selectItemByStatusOk(page,pagesize, point);
             logger.info("SUCCESS: selectItemByStatusOk" );
         }catch (Exception ex){
             logger.info("EXCEPTION: " + EmBusinessError.DATA_SELECT_ERROR.getErrorCode() + " " + EmBusinessError.DATA_SELECT_ERROR.getErrorMsg());
@@ -57,6 +68,11 @@ public class OrderController extends BaseController{
      * @throws BusinessException
      */
     @PutMapping("/order/lists/{order_id}/status/{status_id}")
+    @ApiOperation("修改订单状态")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "order_id", value = "订单ID", dataType = "Integer"),
+            @ApiImplicitParam(name = "status_id", value = "订单状态（0异常1未接2已接3未完成4已完成5已删除）", dataType = "Integer")
+    })
     public CommonReturnType updateItemStatus(@PathVariable("order_id") Integer orderId,
                                              @PathVariable("status_id") Integer statusId) throws BusinessException {
 
@@ -71,7 +87,18 @@ public class OrderController extends BaseController{
         }
         return CommonReturnType.creat(null);
     }
+
+    /**
+     * 通过订单id查找订单
+     * @param id
+     * @return
+     * @throws Exception
+     */
     @GetMapping("/order/lists/{id}/info")
+    @ApiOperation("通过订单id查找订单")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "order_id", value = "订单ID", dataType = "Integer")
+    })
     public CommonReturnType getOrderInfo(@PathVariable("id") Integer id) throws Exception {
         logger.info("PARAM: id "+id);
         OrderDetailVO orderDetailVO=new OrderDetailVO();

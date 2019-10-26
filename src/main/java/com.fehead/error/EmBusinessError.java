@@ -32,6 +32,10 @@ public enum EmBusinessError implements CommonError {
     DATA_DELETE_ERROR(20002, "数据库删除异常"),
     DATA_UPDATE_ERROR(20003, "数据库更新异常"),
     DATA_SELECT_ERROR(20004, "数据库查询异常"),
+
+    // 90000 开头为用户认证相关错误
+    SERVICE_REQUIRE_AUTHENTICATION(90001,"访问的服务需要身份认证"),
+    SERVICE_REQUIRE_ROLE_ADMIN(90002,"访问服务需要管理员权限")
     ;
 
     private EmBusinessError(int errCode, String errMsg) {

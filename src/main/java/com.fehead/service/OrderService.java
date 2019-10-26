@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface OrderService {
 
-    public List<OrderListVO> selectItemByStatusOk(Integer page,Integer pagesize);
+    public List<OrderListVO> selectItemByStatusOk(Integer page,Integer pagesize, Integer point);
 
     public void updateStatus(Integer orderId,Integer statusId);
 

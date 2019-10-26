@@ -194,10 +194,14 @@ public class UserServiceImpl implements UserService {
 
     //删除订单
     @Override
-    public String deleteOrder(Integer id, Integer orderId) {
+    public String deleteOrder(Integer id, Integer orderId) throws BusinessException {
         String str="";
         OrderModel orderModel=new OrderModel();
         orderModel=cloudService.getOrderById(orderId);
+        cloudService.updateStatus2(id, orderId);
+        if (!orderModel.getPublisher().getId().equals(id)) {
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "无删除权限");
+        }
         OrderListVO orderListVO=new OrderListVO();
         BeanUtils.copyProperties(orderModel,orderListVO);
         if(orderListVO.getStatus().getStatus()==1){
@@ -214,6 +218,7 @@ public class UserServiceImpl implements UserService {
     public OrderPickVO getOrderPick(Integer id, Integer orderId) {
         OrderModel orderModel=new OrderModel();
         orderModel=cloudService.getOrderById(orderId);
+        cloudService.updateStatus2(id, orderId);
         //  orderModel=selectByOrderId(orderId);
         if(orderModel.getStatus().getStatus()!=1){
             return null;

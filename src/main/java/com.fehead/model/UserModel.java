@@ -12,10 +12,16 @@ public class UserModel {
     private String avatar;
     private String displayName;
 
-    public UserModel(Integer id, String telphone, String email, String registerMode, String thirdPartyId, String avatar, String displayName) {
-        this.id = id;
+    public UserModel(String telphone, String email, String registerMode, String thirdPartyId, String avatar, String displayName) {
         this.telphone = telphone;
         this.email = email;
+        this.registerMode = registerMode;
+        this.thirdPartyId = thirdPartyId;
+        this.avatar = avatar;
+        this.displayName = displayName;
+    }
+
+    public UserModel(String registerMode, String thirdPartyId, String avatar, String displayName) {
         this.registerMode = registerMode;
         this.thirdPartyId = thirdPartyId;
         this.avatar = avatar;
@@ -80,5 +86,18 @@ public class UserModel {
 
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
+    }
+
+    @Override
+    public String toString() {
+        return "UserModel{" +
+                "id=" + id +
+                ", telphone='" + telphone + '\'' +
+                ", email='" + email + '\'' +
+                ", registerMode='" + registerMode + '\'' +
+                ", thirdPartyId='" + thirdPartyId + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", displayName='" + displayName + '\'' +
+                '}';
     }
 }

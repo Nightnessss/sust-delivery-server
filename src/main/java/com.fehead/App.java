@@ -16,7 +16,7 @@ import java.util.Date;
  *
  */
 @RestController
-@SpringBootApplication(scanBasePackages = {"com.fehead"})
+@SpringBootApplication
 @MapperScan("com.fehead.dao")
 @EnableEurekaClient
 @EnableSwagger2
