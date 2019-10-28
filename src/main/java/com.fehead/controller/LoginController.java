@@ -55,8 +55,7 @@ public class LoginController extends BaseController {
 
     private Logger logger = LoggerFactory.getLogger(LoginController.class);
 
-//    private static final String backurl = "http://192.168.43.7:8081/blank";
-    private static final String backurl = "http://192.168.0.110:8081/blank";
+    private static final String backurl = "回调地址";
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -79,7 +78,7 @@ public class LoginController extends BaseController {
     public CommonReturnType oauth(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         logger.info("开始获取access_token...");
-        String getTokenUrl = "http://nightnessss.cn:8018/page/oauth?callback=" + backurl;
+        String getTokenUrl = "易班获取access_token地址" + backurl;
 //        response.sendRedirect(getTokenUrl);
         Map<String,String> data = new HashMap<>();
         data.put("url",getTokenUrl);
@@ -135,45 +134,8 @@ public class LoginController extends BaseController {
         int id = cloudService.addUser(userModel);
         userModel.setId(id);
 
-//        session.setAttribute("userModel", userModel);
-//        session.setAttribute("access_token", accessToken);
-
-
-//        System.out.println(session.getId());
         return CommonReturnType.creat(userModel);
     }
-
-//    @PostMapping("/addInfo")
-//    public CommonReturnType addInfo(HttpServletRequest request, HttpServletResponse response) throws IOException {
-//        String telphone = request.getParameter("telphone");
-//        String email = request.getParameter("email");
-//        logger.info("PARAM: telphone " + telphone);
-//        logger.info("PARAM: email " + email);
-//        HttpSession session = request.getSession();
-////        String accessToken = (String) session.getAttribute("access_token");
-////        System.out.println(accessToken);
-////        String getUserInfo = "https://openapi.yiban.cn/user/me?" +
-////                "access_token=" + accessToken;
-////
-////        String userInfo = postUtil.sendGet(getUserInfo);
-////        YbReturnModel ybReturnModel = objectMapper.readValue(userInfo, YbReturnModel.class);
-////        UserMeModel userMeModel = ybReturnModel.getInfo();
-////        String thirdPartyId = userMeModel.getYb_userid();
-////        String displayName = unicodeUtil.unicode2String(userMeModel.getYb_usernick());
-////        String avatar = unicodeUtil.unicode2String(userMeModel.getYb_userhead());
-////        UserModel userModel = new UserModel(telphone, email, "易班", thirdPartyId, avatar, displayName);
-//        System.out.println(session.getId());
-//        UserModel userModel = (UserModel) session.getAttribute("userModel");
-//        session.removeAttribute("userModel");
-//        userModel.setTelphone(telphone);
-//        userModel.setEmail(email);
-//
-//        logger.info(userModel.toString());
-//        int userId = cloudService.addUser(userModel);
-//        logger.info("userId:" + userId);
-//
-//        return CommonReturnType.creat("success");
-//    }
 
     /**
      * 用户信息补全
