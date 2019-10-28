@@ -55,6 +55,8 @@ public class FeheadAuthenticationSuccessHandler extends SavedRequestAwareAuthent
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
         logger.info("登陆成功:" + ((UserDetails) authentication.getPrincipal()).getUsername());
+
+        // 登录成功后将用户名添加到 header 中新添加的 Authorization 并以 Bearer 开头
         String token = Jwts.builder()
 //                .setExpiration(new Date(System.currentTimeMillis()+EXPIRE_TIME))
                 .setSubject(((org.springframework.security.core.userdetails.User) authentication.getPrincipal()).getUsername())

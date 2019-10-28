@@ -47,6 +47,7 @@ public class MyUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
+        // 由于是易班登录，这里的 security 登录部分通过获取数据库内信息绕过
         UserModel userModel = cloudService.alreadyLogin(username);
 
         logger.info(username);

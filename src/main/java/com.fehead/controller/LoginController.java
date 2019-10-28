@@ -86,9 +86,18 @@ public class LoginController extends BaseController {
         return CommonReturnType.creat(data);
     }
 
+    /**
+     * 获得当前用户信息并封装成 UserModel 传回给前端
+     * @param request access_token
+     * @param response
+     * @return UserModel
+     * @throws IOException
+     * @throws BusinessException
+     */
     @GetMapping("/login")
     public CommonReturnType login(HttpServletRequest request, HttpServletResponse response) throws IOException, BusinessException {
 
+        // 获取前端传来的 access_token
         HttpSession session = request.getSession();
         String accessToken = request.getParameter("access_token");
         logger.info("access_token:" + accessToken);
@@ -96,6 +105,8 @@ public class LoginController extends BaseController {
             logger.info("access_token为空");
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "access_token为空");
         }
+
+        // 获取用户信息，将返回的信息封装在 YbReturnModel 中
         String getUserInfo = "https://openapi.yiban.cn/user/me?" +
                 "access_token=" + accessToken;
 
@@ -107,8 +118,11 @@ public class LoginController extends BaseController {
         } catch (Exception e) {
             throw new BusinessException(EmBusinessError.DATA_SELECT_ERROR);
         }
+
+        // 从 YbReturnModel 中提取用户信息，封装在 UserMeModel 中
         UserMeModel userMeModel = ybReturnModel.getInfo();
         String thirdPartyId = userMeModel.getYb_userid();
+        // 如果改用户信息已存数据库，则返回数据库中该用户信息，否则添加用户到数据库并返回不完全信息，由前端引导用户进行信息补全
         UserModel userModel = cloudService.alreadyLogin(thirdPartyId);
         if (userModel != null) {
 //            session.setAttribute("userId", userModel.getId());
@@ -161,6 +175,13 @@ public class LoginController extends BaseController {
 //        return CommonReturnType.creat("success");
 //    }
 
+    /**
+     * 用户信息补全
+     * @param request
+     * @param response
+     * @return UserModel
+     * @throws BusinessException
+     */
     @PostMapping("/addInfo")
     public CommonReturnType addInfo(HttpServletRequest request, HttpServletResponse response) throws BusinessException {
         String thirdPartyId = request.getParameter("username");

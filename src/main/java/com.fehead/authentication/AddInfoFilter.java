@@ -31,6 +31,10 @@ import java.io.IOException;
  *
  * @author Nightnessss 2019/10/19 22:38
  */
+
+/**
+ * 添加信息的 Filter ，目前并无软用
+ */
 public class AddInfoFilter implements Filter {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
