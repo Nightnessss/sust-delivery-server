@@ -7,9 +7,9 @@ mybatis:
 spring:
   datasource:
     name: criticism
-    url: jdbc:mysql://111.230.138.67:3306/delivery
-    username: root
-    password: fehead123
+    url:
+    username:
+    password:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.jdbc.Driver
   application:
@@ -22,8 +22,7 @@ spring:
 eureka:
   client:
     service-url:
-#      defaultZone: http://10.111.229.84:8761/eureka
-      defaultZone: http://localhost:8761/eureka
+      defaultZone:
 
 ribbon:
   ReadTimeout: 6000000
