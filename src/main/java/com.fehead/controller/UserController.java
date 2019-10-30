@@ -322,6 +322,27 @@ public class UserController extends BaseController{
         return CommonReturnType.creat(orderListVOS);
     }
 
+    @GetMapping("user/{id}/their/{order_id}")
+    @ApiOperation("查找该用户接收订单的订单信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "用户ID", dataType = "Integer"),
+            @ApiImplicitParam(name = "order_id", value = "订单ID", dataType = "Integer"),
+    })
+    public CommonReturnType getAllTheirOrderId(@PathVariable("id") Integer id
+            , @PathVariable(name="order_id") Integer orderId) throws BusinessException {
+        OrderPickVO orderVOS=null;
+        logger.info("PARAM: id "+id);
+        logger.info("PARAM: page "+orderId);
+        try {
+            orderVOS=userService.getOrderPickedInfo(id, orderId);
+        } catch (Exception e) {
+            logger.info("EXCEPTION: " + EmBusinessError.DATA_SELECT_ERROR.getErrorCode() + " "
+                    + EmBusinessError.DATA_SELECT_ERROR.getErrorMsg());
+            throw new BusinessException(EmBusinessError.DATA_SELECT_ERROR,"获取该用户所有接收订单异常");
+        }
+        logger.info("SUCCESS:getAllTheirList");
+        return CommonReturnType.creat(orderVOS);
+    }
 
     /**
      * 删除订单（如果不是未接状态，则返回失败）
@@ -340,15 +361,15 @@ public class UserController extends BaseController{
     public CommonReturnType deleteOrder(@PathVariable("id") Integer id,
                                         @PathVariable("order_id") Integer order_id)throws BusinessException{
         logger.info("PARAM: id "+id);
-        logger.info("PARAM: order_id "+id);
+        logger.info("PARAM: order_id "+order_id);
         String str="";
-        try {
+//        try {
             str=userService.deleteOrder(id, order_id);
-        }catch (Exception e){
-            logger.info("EXCEPTION: " + EmBusinessError.DATA_DELETE_ERROR.getErrorCode() + " "
-                    + EmBusinessError.DATA_DELETE_ERROR.getErrorMsg());
-            throw new BusinessException(EmBusinessError.DATA_DELETE_ERROR,"数据删除异常");
-        }
+//        }catch (Exception e){
+//            logger.info("EXCEPTION: " + EmBusinessError.DATA_DELETE_ERROR.getErrorCode() + " "
+//                    + EmBusinessError.DATA_DELETE_ERROR.getErrorMsg());
+//            throw new BusinessException(EmBusinessError.DATA_DELETE_ERROR,"数据删除异常");
+//        }
         logger.info("SUCCESS: deleteOrder ");
         return CommonReturnType.creat(str);
     }
@@ -359,7 +380,7 @@ public class UserController extends BaseController{
      * @return
      * @throws BusinessException
      */
-    @PutMapping("/user/{id}/theirLists/{order_id}")
+    @GetMapping("/user/{id}/theirLists/{order_id}")
     @ApiOperation("接订单（如果不是未接状态，则返回失败）")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "用户ID", dataType = "Integer"),
@@ -370,13 +391,7 @@ public class UserController extends BaseController{
         logger.info("PARAM: id "+id);
         logger.info("PARAM: order_id "+id);
         OrderPickVO orderPickVO=new OrderPickVO();
-        try {
-            orderPickVO=userService.getOrderPick(id, order_id);
-        }catch (Exception e){
-            logger.info("EXCEPTION: " + EmBusinessError.DATA_ERROR.getErrorCode() + " "
-                    + EmBusinessError.DATA_INSERT_ERROR.getErrorCode());
-            throw new BusinessException(EmBusinessError.DATA_ERROR,"获取接单信息异常");
-        }
+        orderPickVO=userService.getOrderPick(id, order_id);
         if(orderPickVO==null){
             String str="接单失败，订单非未接状态";
             logger.info("SUCCESS: putInfo ");

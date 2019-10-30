@@ -28,13 +28,21 @@ public class OrderControllerTest {
     @Test
     public void selectItemByStatusOk() throws Exception {
         String result = mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/1/SUSTDelivery/view/order/lists")
-                        .param("page","1")
+                MockMvcRequestBuilders.post("/api/v1.0/SUSTDelivery/view/order/lists")
+                        .param("search","")
         )
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn().getResponse().getContentAsString();
         System.out.println(result);
     }
 
-
+    @Test
+    public void whenGetAllDeliveryPointSuccess() throws Exception {
+        String result = mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/v1.0/SUSTDelivery/view/order/lists/delivery")
+        )
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        System.out.println(result);
+    }
 }

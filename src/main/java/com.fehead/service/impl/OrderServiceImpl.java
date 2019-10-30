@@ -1,7 +1,9 @@
 package com.fehead.service.impl;
 
 import com.fehead.controller.vo.OrderDetailVO;
+import com.fehead.controller.vo.OrderDetailVOIncludePicker;
 import com.fehead.controller.vo.OrderListVO;
+import com.fehead.controller.vo.OrderPickVO;
 import com.fehead.model.DeliveryPointModel;
 import com.fehead.model.OrderModel;
 import com.fehead.model.StatusModel;
@@ -27,7 +29,20 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderListVO> selectItemByStatusOk(Integer page,Integer pagesize, Integer point) {
 
 
-        List<OrderModel> orderModelList=cloudService.getAcceptableOrder(page,pagesize, point);
+        List<OrderModel> orderModelList=cloudService.getAcceptableOrder(point,page, pagesize);
+
+        List<OrderListVO> realOrderListVOList=orderModelList.stream().map(orderModel -> {
+            OrderListVO orderListVO=new OrderListVO();
+            BeanUtils.copyProperties(orderModel,orderListVO);
+            return orderListVO;
+        }).collect(Collectors.toList());
+
+        return realOrderListVOList;
+    }
+
+    @Override
+    public List<OrderListVO> search(Integer page, Integer pagesize, String search) {
+        List<OrderModel> orderModelList=cloudService.getAcceptableOrderByDestination(search, page, pagesize);
 
         List<OrderListVO> realOrderListVOList=orderModelList.stream().map(orderModel -> {
             OrderListVO orderListVO=new OrderListVO();
@@ -48,11 +63,22 @@ public class OrderServiceImpl implements OrderService {
     //查找该订单详细信息
     @Override
     public OrderDetailVO getDetailOrder(Integer id) {
-        OrderModel orderModel=new OrderModel();
-        orderModel=cloudService.getOrderById(id);
-        OrderDetailVO orderDetailVO=new OrderDetailVO();
+        final OrderModel orderModel=cloudService.getOrderById(id);
+        OrderDetailVOIncludePicker orderDetailVO=new OrderDetailVOIncludePicker();
         BeanUtils.copyProperties(orderModel,orderDetailVO);
+        orderDetailVO.setOrderPickVO(new OrderPickVO(){{
+            setPickCode(orderModel.getPick().getPickCode());
+            setPickName(orderModel.getPick().getPickName());
+            setTailNumber(orderModel.getPick().getTailNumber());
+        }} );
+        orderDetailVO.setReceiver(orderModel.getReceiver());
+
         return orderDetailVO;
+    }
+
+    @Override
+    public List<DeliveryPointModel> selectAllDeliveryPoint() {
+        return cloudService.getAllDeliveryPoint();
     }
 
 

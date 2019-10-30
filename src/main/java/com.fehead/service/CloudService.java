@@ -21,8 +21,8 @@ public interface CloudService {
     public void updateStatus(@PathVariable("order_id") Integer orderId,
                              @PathVariable("status_id") Integer statusId);
 
-    @PutMapping("/api/v1.0/SUSTDelivery/data/user/{id}/order/{order_id}")
-    public void updateStatus2(@PathVariable("id") Integer id,
+    @GetMapping("/api/v1.0/SUSTDelivery/data/user/{id}/order/{order_id}")
+    public boolean updateStatus2(@PathVariable("id") Integer id,
                              @PathVariable("order_id") Integer orderId);
 
     @GetMapping("/api/v1.0/SUSTDelivery/data/order/{order_id}")
@@ -62,6 +62,11 @@ public interface CloudService {
                                                @RequestParam("page") Integer page,
                                                @RequestParam("pagesize") Integer pagesize);
 
+    @PostMapping("/api/v1.0/SUSTDelivery/data/order/lists")
+    public List<OrderModel> getAcceptableOrderByDestination(@RequestParam("search") String search,
+                                               @RequestParam("page") Integer page,
+                                               @RequestParam("pagesize") Integer pagesize);
+
     @GetMapping("/api/v1.0/SUSTDelivery/data/order/lists/delivery/{delivery_id}")
     public DeliveryPointModel getDeliveryById(@PathVariable("delivery_id") Integer deliveryId);
 
@@ -79,4 +84,7 @@ public interface CloudService {
 
     @PostMapping("/api/v1.0/SUSTDelivery/data/login/addInfo")
     public int addInfo(@RequestBody UserModel userModel);
+
+    @GetMapping("/api/v1.0/SUSTDelivery/data/order/lists/delivery")
+    public List<DeliveryPointModel> getAllDeliveryPoint();
 }

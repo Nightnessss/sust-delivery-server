@@ -221,6 +221,32 @@
       </plugins>
     </pluginManagement>
     <plugins>
+        <plugin>
+          <!--该插件主要用途：构建可执行的JAR -->
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+          <configuration>
+            <fork>true</fork> <!-- 如果没有该配置，devtools不会生效 -->
+            <!-- 指定该Main Class为全局的唯一入口 -->
+            <mainClass>com.fehead.App</mainClass>
+            <layout>ZIP</layout>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>repackage</goal><!--可以把依赖的包都打包到生成的Jar包中-->
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.19.1</version>
+          <configuration>
+            <skipTests>true</skipTests>    <!--默认关掉单元测试 -->
+          </configuration>
+        </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>

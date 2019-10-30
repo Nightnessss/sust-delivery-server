@@ -56,7 +56,12 @@ public class LoginController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(LoginController.class);
 
 //    private static final String backurl = "http://192.168.43.7:8081/blank";
-    private static final String backurl = "http://192.168.0.110:8081/blank";
+//    private static final String backurl = "http://192.168.0.110:8081/blank";
+
+    private static final String backurl = "http://192.168.43.7:8081/blank";
+//    private static final String backurl = "http://10.111.118.205:8081/blank";
+//    private static final String backurl = "http://express.duizhankeji.com:8080/blank";
+
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -79,7 +84,8 @@ public class LoginController extends BaseController {
     public CommonReturnType oauth(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         logger.info("开始获取access_token...");
-        String getTokenUrl = "http://nightnessss.cn:8018/page/oauth?callback=" + backurl;
+//        String getTokenUrl = "http://nightnessss.cn:8018/page/oauth?callback=" + backurl;
+        String getTokenUrl = "http://yiban.sust.edu.cn/yibanapi/?backurl=" + backurl;
 //        response.sendRedirect(getTokenUrl);
         Map<String,String> data = new HashMap<>();
         data.put("url",getTokenUrl);

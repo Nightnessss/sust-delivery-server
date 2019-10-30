@@ -22,6 +22,8 @@ public interface UserService {
     UserVO getUserById(Integer id);
     List<OrderListVO> getAllOderList(Integer id, Integer page,Integer pageSize);
     String deleteOrder(Integer id,Integer orderId) throws BusinessException;
-    OrderPickVO getOrderPick(Integer id,Integer orderId);
+    OrderPickVO getOrderPick(Integer id,Integer orderId) throws BusinessException;
+
+    OrderPickVO getOrderPickedInfo(Integer id,Integer orderId) throws BusinessException;
 
 }

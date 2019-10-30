@@ -184,10 +184,19 @@ public class UserServiceImpl implements UserService {
         List<OrderModel> orderModels=new ArrayList<>();
         orderModels=cloudService.getMyReceiverOrder(id,page,pagesize);
         List<OrderListVO> orderListVOS=new ArrayList<>();
+        List<OrderPickVO> orderPickVOS=new ArrayList<>();
         for(OrderModel order:orderModels){
             OrderListVO orderListVO=new OrderListVO();
             BeanUtils.copyProperties(order,orderListVO);
             orderListVOS.add(orderListVO);
+
+            OrderPickVO orderPickVO=new OrderPickVO();
+            orderPickVO.setId(order.getId());
+            orderPickVO.setOrderId(order.getId());
+            orderPickVO.setPickCode(order.getPick().getPickCode());
+            orderPickVO.setPickName(order.getPick().getPickName());
+            orderPickVO.setTailNumber(order.getPick().getTailNumber());
+            orderPickVOS.add(orderPickVO);
         }
         return orderListVOS;
     }
@@ -198,31 +207,33 @@ public class UserServiceImpl implements UserService {
         String str="";
         OrderModel orderModel=new OrderModel();
         orderModel=cloudService.getOrderById(orderId);
-        cloudService.updateStatus2(id, orderId);
+//        cloudService.updateStatus2(id, orderId);
         if (!orderModel.getPublisher().getId().equals(id)) {
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "无删除权限");
         }
         OrderListVO orderListVO=new OrderListVO();
         BeanUtils.copyProperties(orderModel,orderListVO);
-        if(orderListVO.getStatus().getStatus()==1){
+        if(orderListVO.getStatus().getStatus()==1||orderListVO.getStatus().getStatus()==4){ //能删除未接和已完成的订单
             str="删除成功";
             cloudService.updateStatus(orderId,5);
         }else{
-            str="删除失败";
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "订单已被接下不能删除");
         }
         return str;
     }
 
     //接订单
     @Override
-    public OrderPickVO getOrderPick(Integer id, Integer orderId) {
-        OrderModel orderModel=new OrderModel();
-        orderModel=cloudService.getOrderById(orderId);
-        cloudService.updateStatus2(id, orderId);
+    public OrderPickVO getOrderPick(Integer id, Integer orderId) throws BusinessException {
+        OrderModel orderModel=cloudService.getOrderById(orderId);
+        if (orderModel.getPublisher().getId()==id) {
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "请不要接自己的订单");
+        }
         //  orderModel=selectByOrderId(orderId);
         if(orderModel.getStatus().getStatus()!=1){
-            return null;
+            throw new BusinessException(EmBusinessError.DATA_UPDATE_ERROR,"订单已失效或已经被接");
         }
+        cloudService.updateStatus2(id, orderId);
         OrderPickVO orderPickVO=new OrderPickVO();
         orderPickVO.setId(orderId);
         orderPickVO.setOrderId(orderId);
@@ -231,6 +242,34 @@ public class UserServiceImpl implements UserService {
         orderPickVO.setTailNumber(orderModel.getPick().getTailNumber());
         return orderPickVO;
     }
+
+    /**
+     * 获取已接订单的订单信息
+     * @param id
+     * @param orderId
+     * @return
+     * @throws BusinessException
+     */
+    @Override
+    public OrderPickVO getOrderPickedInfo(Integer id, Integer orderId) throws BusinessException {
+        OrderModel orderModel=cloudService.getOrderById(orderId);
+        if (orderModel.getPublisher().getId()==id) {
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "请不要接自己的订单");
+        }
+        //  orderModel=selectByOrderId(orderId);
+        if(orderModel.getStatus().getStatus()==1){
+            throw new BusinessException(EmBusinessError.DATA_UPDATE_ERROR,"订单异常");
+        }
+
+        OrderPickVO orderPickVO=new OrderPickVO();
+        orderPickVO.setId(orderId);
+        orderPickVO.setOrderId(orderId);
+        orderPickVO.setPickCode(orderModel.getPick().getPickCode());
+        orderPickVO.setPickName(orderModel.getPick().getPickName());
+        orderPickVO.setTailNumber(orderModel.getPick().getTailNumber());
+        return orderPickVO;
+    }
+
     private UserVO convertFromModel(UserModel userModel){
         if(userModel==null){
             return null;

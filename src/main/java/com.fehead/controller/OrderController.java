@@ -4,6 +4,7 @@ import com.fehead.controller.vo.OrderDetailVO;
 import com.fehead.controller.vo.OrderListVO;
 import com.fehead.error.BusinessException;
 import com.fehead.error.EmBusinessError;
+import com.fehead.model.DeliveryPointModel;
 import com.fehead.model.StatusModel;
 import com.fehead.response.CommonReturnType;
 import com.fehead.service.OrderService;
@@ -38,13 +39,14 @@ public class OrderController extends BaseController{
     @GetMapping("/order/lists/{point}")
     @ApiOperation("分页查找订单（只返回可接订单）")
     @ApiImplicitParams({
+            @ApiImplicitParam(name = "point", value = "快递点", dataType = "Integer"),
             @ApiImplicitParam(name = "page", value = "页数", dataType = "Integer"),
             @ApiImplicitParam(name = "pagesize", value = "页大小", dataType = "Integer")
     })
-    public CommonReturnType selectItemByStatusOk(@PathVariable("point") Integer point,
+    public CommonReturnType selectItemByStatusOk(@PathVariable(value = "point") Integer point,
                                                  @RequestParam(value = "page", defaultValue = "1") Integer page,
                                                  @RequestParam(value = "pagesize", defaultValue = "6") Integer pagesize) throws BusinessException {
-        logger.info("PARAM: point " + page);
+        logger.info("PARAM: point " + point);
         logger.info("PARAM: page " + page);
         logger.info("PARAM: pagesize " + pagesize);
 
@@ -60,6 +62,34 @@ public class OrderController extends BaseController{
 
     }
 
+
+    @PostMapping("/order/lists")
+    @ApiOperation("分页关键字搜索订单（只返回可接订单）")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "search", value = "查找", dataType = "String"),
+            @ApiImplicitParam(name = "page", value = "页数", dataType = "Integer"),
+            @ApiImplicitParam(name = "pagesize", value = "页大小", dataType = "Integer")
+    })
+    public CommonReturnType search(@RequestParam(value = "search", defaultValue = "") String search,
+                                   @RequestParam(value = "page", defaultValue = "1") Integer page,
+                                   @RequestParam(value = "pagesize", defaultValue = "6") Integer pagesize) throws BusinessException {
+
+        logger.info("PARAM: search " + search);
+        logger.info("PARAM: page " + page);
+        logger.info("PARAM: pagesize " + pagesize);
+
+        List<OrderListVO> realOrderListVOList=new ArrayList<>();
+        try {
+            realOrderListVOList=orderService.search(page,pagesize, search);
+            logger.info("SUCCESS: selectItemByStatusOk" );
+        }catch (Exception ex){
+            logger.info("EXCEPTION: " + EmBusinessError.DATA_SELECT_ERROR.getErrorCode() + " " + EmBusinessError.DATA_SELECT_ERROR.getErrorMsg());
+            throw new BusinessException(EmBusinessError.DATA_SELECT_ERROR);
+        }
+        return  CommonReturnType.creat(realOrderListVOList);
+    }
+
+
     /**
      * 修改订单状态
      * @param orderId
@@ -67,7 +97,7 @@ public class OrderController extends BaseController{
      * @return
      * @throws BusinessException
      */
-    @PutMapping("/order/lists/{order_id}/status/{status_id}")
+    @GetMapping("/order/lists/{order_id}/status/{status_id}")
     @ApiOperation("修改订单状态")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "order_id", value = "订单ID", dataType = "Integer"),
@@ -115,5 +145,12 @@ public class OrderController extends BaseController{
     }
 
 
+    @GetMapping("/order/lists/delivery")
+    @ApiOperation("获取所有快递点")
+    public CommonReturnType getAllDeliveryPoint() {
+        List<DeliveryPointModel> deliveryPointModels = orderService.selectAllDeliveryPoint();
+
+        return CommonReturnType.creat(deliveryPointModels);
+    }
 
 }
