@@ -5,7 +5,6 @@ server:
 mybatis:
   mapper-locations: classpath:mapping/*.xml
 spring:
-<<<<<<< HEAD
   profiles:
     active: enc
 
@@ -31,26 +30,7 @@ spring:
 #  connectionProperties:
 #    tokenUrl:
 #    backUrl:
-=======
-  datasource:
-    name: criticism
-    url:
-    username:
-    password:
-    type: com.alibaba.druid.pool.DruidDataSource
-    driver-class-name: com.mysql.jdbc.Driver
-  application:
-    name: VIEW-SERVICE
-  mvc:
-    static-path-pattern: /static/**
-#  profiles:
-#    active: env
 
-eureka:
-  client:
-    service-url:
-      defaultZone:
->>>>>>> a1cdebe064b7e1906b419ee98bb60a9f6b83a995
 
 ribbon:
   ReadTimeout: 6000000
