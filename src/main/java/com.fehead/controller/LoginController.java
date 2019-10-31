@@ -56,15 +56,11 @@ public class LoginController extends BaseController {
 
     private Logger logger = LoggerFactory.getLogger(LoginController.class);
 
-<<<<<<< HEAD
     @Autowired
     private GlobalProperties globalProperties;
 
     private String backurl = globalProperties.getConnectionProperties().getBackUrl();
 
-=======
-    private static final String backurl = "回调地址";
->>>>>>> a1cdebe064b7e1906b419ee98bb60a9f6b83a995
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -87,12 +83,7 @@ public class LoginController extends BaseController {
     public CommonReturnType oauth(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         logger.info("开始获取access_token...");
-<<<<<<< HEAD
         String getTokenUrl = globalProperties.getConnectionProperties().getTokenUrl() + backurl;
-=======
-        String getTokenUrl = "易班获取access_token地址" + backurl;
-//        response.sendRedirect(getTokenUrl);
->>>>>>> a1cdebe064b7e1906b419ee98bb60a9f6b83a995
         Map<String,String> data = new HashMap<>();
         data.put("url",getTokenUrl);
         return CommonReturnType.creat(data);
