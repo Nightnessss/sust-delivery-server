@@ -34,6 +34,7 @@ public class OrderServiceImpl implements OrderService {
         List<OrderListVO> realOrderListVOList=orderModelList.stream().map(orderModel -> {
             OrderListVO orderListVO=new OrderListVO();
             BeanUtils.copyProperties(orderModel,orderListVO);
+            orderListVO.setDisplayName(orderModel.getPublisher().getDisplayName());
             return orderListVO;
         }).collect(Collectors.toList());
 
@@ -47,6 +48,7 @@ public class OrderServiceImpl implements OrderService {
         List<OrderListVO> realOrderListVOList=orderModelList.stream().map(orderModel -> {
             OrderListVO orderListVO=new OrderListVO();
             BeanUtils.copyProperties(orderModel,orderListVO);
+            orderListVO.setDisplayName(orderModel.getPublisher().getDisplayName());
             return orderListVO;
         }).collect(Collectors.toList());
 
@@ -57,7 +59,6 @@ public class OrderServiceImpl implements OrderService {
 
         cloudService.updateStatus(orderId,statusId);
 
-        return;
     }
 
     //查找该订单详细信息

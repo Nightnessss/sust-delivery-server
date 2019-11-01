@@ -16,6 +16,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -59,7 +60,7 @@ public class LoginController extends BaseController {
     @Autowired
     private GlobalProperties globalProperties;
 
-    private String backurl = globalProperties.getConnectionProperties().getBackUrl();
+//    private String backurl = globalProperties.getConnectionProperties().getBackUrl();
 
 
     private ObjectMapper objectMapper = new ObjectMapper();
@@ -81,6 +82,7 @@ public class LoginController extends BaseController {
     @GetMapping("/oauth")
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public CommonReturnType oauth(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String backurl = globalProperties.getConnectionProperties().getBackUrl();
 
         logger.info("开始获取access_token...");
         String getTokenUrl = globalProperties.getConnectionProperties().getTokenUrl() + backurl;
