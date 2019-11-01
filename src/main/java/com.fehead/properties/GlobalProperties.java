@@ -1,6 +1,7 @@
 package com.fehead.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 /**
  * 写代码 敲快乐

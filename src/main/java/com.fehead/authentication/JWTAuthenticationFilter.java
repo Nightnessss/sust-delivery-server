@@ -1,5 +1,7 @@
 package com.fehead.authentication;
 
+import com.fehead.error.BusinessException;
+import com.fehead.error.EmBusinessError;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -61,7 +63,7 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
         String token = request.getHeader("Authorization");
         if (token != null) {
 
-            String user = "";
+            String user = null;
             try {
                 // parse the token.
                 user = Jwts.parser()
@@ -70,6 +72,7 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
                         .getBody()
                         .getSubject();
             }catch (ExpiredJwtException exp){// jwt过期
+//                throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "token过期");
                 return null;
             }
 

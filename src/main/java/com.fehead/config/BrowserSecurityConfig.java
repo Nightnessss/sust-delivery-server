@@ -59,9 +59,9 @@ public class BrowserSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsService userDetailsService;
-
-    @Autowired
-    CORSFilter corsFilter;
+//
+//    @Autowired
+//    CORSFilter corsFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {

@@ -23,9 +23,9 @@ package com.fehead.properties;
  */
 public class ConnectionProperties {
 
-    private String tokenUrl="testt";
+    private String tokenUrl;
 
-    private String backUrl="test";
+    private String backUrl;
 
     public String getTokenUrl() {
         return tokenUrl;
